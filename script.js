@@ -1,56 +1,20 @@
-let currentIndex = 0;
+const wrapper = document.querySelector('.wrapper');
+const items = Array.from(wrapper.children);
 
-const contents = document.querySelectorAll('.content');
+// Create a scrollable container
+const scrollContainer = document.createElement('div');
+scrollContainer.classList.add('scroll-container');
 
-// Add event listener for scrolling
-window.addEventListener('wheel', (event) => {
-  // Prevent default scrolling behavior
-  event.preventDefault();
+// Append items to the scrollable container twice for looping
+items.forEach(item => scrollContainer.appendChild(item.cloneNode(true)));
+items.forEach(item => scrollContainer.appendChild(item.cloneNode(true)));
 
-  // Determine scroll direction
-  const direction = event.deltaY > 0 ? 1 : -1;
+// Append the scrollable container back to the wrapper
+wrapper.innerHTML = '';
+wrapper.appendChild(scrollContainer);
 
-  // Calculate new index
-  const newIndex = currentIndex + direction;
-
-  // Check bounds
-  if (newIndex >= 0 && newIndex < contents.length) {
-    // Hide current content
-    contents[currentIndex].classList.remove('active');
-
-    // Show new content
-    contents[newIndex].classList.add('active');
-
-    // Update index
-    currentIndex = newIndex;
-  }
-});
-
-
-const textSequence = ["Hello...", "Welcome to...", "My Portfolio"];
-const welcomeDiv = document.getElementById("welcome-text");
-
-textSequence.push(welcomeDiv.textContent);
-
-// Function to update the text with animation
-function updateText() {
-  if (currentIndex < textSequence.length) {
-    // Update the text content
-    welcomeDiv.textContent = textSequence[currentIndex];
-
-    // Trigger animation by resetting and reapplying the class
-    welcomeDiv.style.opacity = 0;
-    setTimeout(() => {
-      welcomeDiv.style.opacity = 1;
-    }, 100);
-
-    // Increment the index for the next text
-    currentIndex++;
-
-    // Schedule the next text update
-    setTimeout(updateText, 2000); // 1 second delay
-  }
-}
-
-// Start the sequence
-updateText();
+// Dynamically adjust the width of the scroll-container
+const itemWidth = 100; // Match your CSS item width
+const gap = 30; // Match your CSS gap
+const totalWidth = (itemWidth + gap) * items.length * 2; // Double for looping
+scrollContainer.style.width = `${totalWidth}px`;
